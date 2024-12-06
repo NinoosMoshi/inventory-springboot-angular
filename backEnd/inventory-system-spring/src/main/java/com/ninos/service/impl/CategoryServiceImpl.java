@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Response getAllCategories() {
         List<Category> categories = categoryRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
-        List<CategoryDTO> categoryDTOS = modelMapper.map(categories, new TypeToken<List<UserDTO>>() {}.getType());
+        List<CategoryDTO> categoryDTOS = modelMapper.map(categories, new TypeToken<List<CategoryDTO>>() {}.getType());
 
         return Response.builder()
                 .status(200)
@@ -80,8 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response deleteCategory(Long id) {
-        Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+        categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
         categoryRepository.deleteById(id);
 
         return Response.builder()
