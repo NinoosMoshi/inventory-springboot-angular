@@ -1,9 +1,7 @@
 package com.ninos.controller;
 
-import com.ninos.dto.CategoryDTO;
 import com.ninos.dto.Response;
 import com.ninos.dto.SupplierDTO;
-import com.ninos.service.CategoryService;
 import com.ninos.service.SupplierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
