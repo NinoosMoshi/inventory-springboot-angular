@@ -39,7 +39,10 @@ public class ProductController {
         productDTO.setCategoryId(categoryId);
         productDTO.setDescription(description);
 
-        System.out.println(productDTO);
+        System.out.println("product dto: "+productDTO);
+
+        log.info("Received file: {}", imageFile.getOriginalFilename());
+        log.info("Content-Type: {}", imageFile.getContentType());
 
         return ResponseEntity.ok(productService.saveProduct(productDTO, imageFile));
     }
