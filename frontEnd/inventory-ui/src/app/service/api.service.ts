@@ -54,9 +54,10 @@ isAuthenticated(): boolean {
   return !!token;
 }
 
+
 isAdmin(): boolean {
   const role = this.getFromStorageAndDecrypt('role');
-  return role === 'AMDIN';
+  return role === 'ADMIN';
 }
 
 
