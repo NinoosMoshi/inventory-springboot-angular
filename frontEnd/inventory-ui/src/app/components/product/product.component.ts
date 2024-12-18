@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { ApiService } from '../../service/api.service';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product',
@@ -29,7 +29,7 @@ export class ProductComponent implements OnInit {
   fetchProducts() {
     this.apiService.getAllProducts().subscribe({
       next: (res) => {
-        const products = res.product || [];
+        const products = res.products || [];
         this.totalPages = Math.ceil(products.length / this.itemsPerPage);
         this.products = products.slice(
           (this.currentPage -1 ) * this.itemsPerPage, 
