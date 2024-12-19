@@ -23,7 +23,6 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchProducts();
-    console.log("products: ",this.products)
   }
 
   fetchProducts() {
@@ -35,7 +34,6 @@ export class ProductComponent implements OnInit {
           (this.currentPage -1 ) * this.itemsPerPage, 
           this.currentPage * this.itemsPerPage
         );
-        console.log("response: ",res)
       },
       error: (error) => {
         console.log(error)

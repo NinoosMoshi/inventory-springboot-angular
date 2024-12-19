@@ -33,7 +33,8 @@ public class ProductServiceImpl implements ProductService {
     private static final String IMAGE_DIRECTORY = System.getProperty("user.dir") + "/product-image/";
 
     //AFTER YOUR FRONTEND IS SET UP WROTE THIS SO THE IMAGE IS SAVED IN YOUR FRONTEND PUBLIC FOLDER
-    private static final String IMAGE_DIRECTOR_FRONTEND = "/Users/dennismac/phegonDev/ims-angular/public/products/";
+    private static final String IMAGE_DIRECTOR_FRONTEND = "C:/Users/Ninos/OneDrive/Desktop/projects-2025/inventory-system(springboot-angular)/frontEnd/inventory-ui/public/products/";
+//    private static final String IMAGE_DIRECTOR_FRONTEND = "/Users/dennismac/phegonDev/ims-angular/public/products/";
 
 
     @Override
@@ -52,7 +53,8 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         if (imageFile != null){
-            String imagePath = saveImage(imageFile);
+//            String imagePath = saveImage(imageFile);
+            String imagePath = saveImageToFrontendPublicFolder(imageFile);
             productToSave.setImageUrl(imagePath);
         }
 
@@ -92,23 +94,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response updateProduct(ProductDTO productDTO, MultipartFile imageFile) {
+
         Product existingProduct = productRepository.findById(productDTO.getProductId())
                 .orElseThrow(()-> new NotFoundException("Product Not Found"));
 
         //check if image is associated with the update request
         if (imageFile != null && !imageFile.isEmpty()){
-            String imagePath = saveImage(imageFile);
+            String imagePath = saveImageToFrontendPublicFolder(imageFile);
             existingProduct.setImageUrl(imagePath);
         }
         //Check if category is to be changed for the product
         if (productDTO.getCategoryId() != null && productDTO.getCategoryId() > 0){
+
             Category category = categoryRepository.findById(productDTO.getCategoryId())
                     .orElseThrow(()-> new NotFoundException("Category Not Found"));
-
             existingProduct.setCategory(category);
         }
 
-        //check and update fields
+        //check and update fiedls
+
         if (productDTO.getName() !=null && !productDTO.getName().isBlank()){
             existingProduct.setName(productDTO.getName());
         }
@@ -135,7 +139,9 @@ public class ProductServiceImpl implements ProductService {
                 .status(200)
                 .message("Product successfully Updated")
                 .build();
+
     }
+
 
 
 
@@ -151,6 +157,35 @@ public class ProductServiceImpl implements ProductService {
                 .status(200)
                 .message("Product successfully deleted")
                 .build();
+    }
+
+
+    private String saveImageToFrontendPublicFolder(MultipartFile imageFile){
+        //validate image check
+        if (!imageFile.getContentType().startsWith("image/")){
+            throw new IllegalArgumentException("Only image files are allowed");
+        }
+        //create the directory to store images if it doesn't exist
+        File directory = new File(IMAGE_DIRECTOR_FRONTEND);
+
+        if (!directory.exists()){
+            directory.mkdir();
+            log.info("Directory was created");
+        }
+        //generate unique file name for the image
+        String uniqueFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+        //get the absolute path of the image
+        String imagePath = IMAGE_DIRECTOR_FRONTEND + uniqueFileName;
+
+        try {
+            File desctinationFile = new File(imagePath);
+            imageFile.transferTo(desctinationFile); //we are transfering(writing to this folder)
+
+        }catch (Exception e){
+            throw new IllegalArgumentException("Error occurend while saving image" + e.getMessage());
+        }
+
+        return "products/"+uniqueFileName;
     }
 
 
